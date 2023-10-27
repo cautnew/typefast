@@ -14,14 +14,22 @@ const maxGabaritos = gabaritos.length;
 
 var interval;
 var timerRunning = false;
-var hundredths;
-var indexCurrentGabarito;
-var currentGabarito;
+var hundredths = 0;
+var indexCurrentGabarito = 0;
+var totalWordsCurrentGabarito = 0;
+var totalCharsCurrentGabarito = 0;
+var currentGabarito = "";
+var txtTyped = "";
 
 const startTimer = () => {
   timerRunning = true;
   hundredths = 0;
   interval = setInterval(timerClock, 10);
+};
+
+const stopTimer = () => {
+  clearInterval(interval);
+  timerRunning = false;
 };
 
 const leadingZero = (num = 0) => {
@@ -57,12 +65,46 @@ const getGabarito = () => {
 };
 
 const loadStatistics = () => {
-  const totalCharsCurrentGabarito = currentGabarito.length;
-  const totalWordsCurrentGabarito = currentGabarito.split(' ').length;
+  totalCharsCurrentGabarito = currentGabarito.length;
+  totalWordsCurrentGabarito = currentGabarito.split(' ').length;
+};
+
+const startGame = () => {
+  const txtTyped = txtUser.value;
+  const charsTyped = txtTyped.length;
+
+  txtUser.setAttribute('maxlength', totalCharsCurrentGabarito);
+
+  if (charsTyped === 0 && !timerRunning) {
+    startTimer();
+  }
+};
+
+const resetGame = () => {
+  stopTimer();
+  hundredths = 0;
+  updateTimer();
+  currentGabarito = getGabarito();
+  loadStatistics();
+  txtExample.innerText = currentGabarito;
+  txtUser.value = '';
+  txtUser.removeAttribute('disabled');
+};
+
+const resultCheck = () => {
+  txtTyped = txtUser.value;
+  const qtdCharsTyped = txtTyped.length;
+
+  if (txtTyped == currentGabarito) {
+    stopTimer();
+    txtUser.setAttribute('disabled', 'disabled');
+  }
 };
 
 window.addEventListener('load', function () {
-  currentGabarito = getGabarito();
-  txtExample.innerText = currentGabarito;
-  startTimer();
+  btnRestart.addEventListener('click', resetGame);
+  txtUser.addEventListener('keyup', resultCheck);
+  txtUser.addEventListener('keypress', startGame);
+
+  resetGame();
 });
