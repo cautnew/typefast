@@ -94,7 +94,7 @@ const updateTimer = () => {
 };
 
 const startGame = () => {
-  const txtTyped = txtUser.value;
+  txtTyped = txtUser.value;
   const charsTyped = txtTyped.length;
 
   btnRestart.innerText = "Reiniciar jogo";
