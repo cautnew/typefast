@@ -4,10 +4,21 @@ const spanTimer = document.querySelector("#span-timer");
 const btnRestart = document.querySelector("#btn-restart");
 const spcProgress = document.querySelector(".progress");
 const progressBar = spcProgress.querySelector(".progress-bar");
+const tableStatistics = document.querySelector('#table-statistics');
+const celValTime = document.querySelector("#val-time");
+const celValWordCount = document.querySelector("#val-word-count");
+const celValCharCount = document.querySelector("#val-char-count");
+const celEvgWordCount = document.querySelector("#evg-word-count");
+const celEvgCharCount = document.querySelector("#evg-char-count");
 
 var interval;
 var timerRunning = false;
 var hundredths = 0;
+var cents = 0;
+var min = 0;
+var sec = 0;
+var msc = 0;
+var totalSec = 0;
 var indexCurrentGabarito = 0;
 var totalWordsCurrentGabarito = 0;
 var totalCharsCurrentGabarito = 0;
@@ -64,15 +75,20 @@ const loadStatistics = () => {
 };
 
 const updateTimer = () => {
-  const cents = hundredths/100;
-  const min = Math.floor(cents/60);
-  const mili_min = min * 60;
+  cents = hundredths/100;
+  const val_min = cents/60;
+  min = Math.floor(val_min);
 
-  const sec = Math.floor(cents - mili_min);
+  const mili_min = min * 60;
+  const val_sec = cents - mili_min;
+  sec = Math.floor(val_sec);
+
   const hand_sec = sec * 100;
   const hand_mili_sec = mili_min * 100;
+  const val_msc = hundredths - hand_sec - hand_mili_sec
+  msc = Math.floor(val_msc);
 
-  const msc = Math.floor(hundredths - hand_sec - hand_mili_sec);
+  totalSec = mili_min + Math.round(val_sec);
 
   spanTimer.innerText = leadingZero(min) + ":" + leadingZero(sec) + "." + leadingZero(msc);
 };
@@ -92,6 +108,16 @@ const startGame = () => {
 const endGame = () => {
   stopTimer();
   txtUser.setAttribute('disabled', 'disabled');
+  const evgWordCount = totalWordsCurrentGabarito / totalSec;
+  const evgCharCount = totalCharsCurrentGabarito / totalSec;
+
+  celValTime.innerText = totalSec + "s";
+  celValWordCount.innerText = totalWordsCurrentGabarito;
+  celValCharCount.innerText = totalCharsCurrentGabarito;
+  celEvgWordCount.innerText = evgWordCount.toFixed(2) + "w/s";
+  celEvgCharCount.innerText = evgCharCount.toFixed(2) + "c/s";
+
+  tableStatistics.style.display = 'block';
 };
 
 const resetGame = () => {
@@ -101,7 +127,9 @@ const resetGame = () => {
   currentGabarito = getGabarito();
   loadStatistics();
   txtExample.innerText = currentGabarito;
+  btnRestart.innerText = "Carregar de novo";
   txtUser.value = '';
+  tableStatistics.style.display = 'none';
   txtUser.removeAttribute('disabled');
   updateProgressBar(0);
 };
@@ -127,6 +155,7 @@ window.addEventListener('load', function () {
   btnRestart.addEventListener('click', resetGame);
   txtUser.addEventListener('keyup', resultCheck);
   txtUser.addEventListener('keypress', startGame);
+  tableStatistics.style.display = 'none';
 
   resetGame();
 });

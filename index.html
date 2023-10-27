@@ -38,7 +38,33 @@
         </div>
       </div>
       <div class="card-footer d-flex justify-content-between">
-        <div class="d-flex align-content-center mx-auto"><span id="span-timer" class="font-monospace display-6">00:00.00</span></div>
+        <div class="d-flex align-content-center mx-auto">
+          <span id="span-timer" class="font-monospace display-6 me-2">00:00.00</span>
+          <table id="table-statistics" class="table table-sm table-striped">
+            <tbody>
+              <tr>
+                <th>Tempo total do jogo:</th>
+                <td id="val-time"></td>
+              </tr>
+              <tr>
+                <th>Palavras digitadas:</th>
+                <td id="val-word-count"></td>
+              </tr>
+              <tr>
+                <th>Letras digitadas:</th>
+                <td id="val-char-count"></td>
+              </tr>
+              <tr>
+                <th>Tempo médio por palavra:</th>
+                <td id="evg-word-count"></td>
+              </tr>
+              <tr>
+                <th>Tempo médio por letra:</th>
+                <td id="evg-char-count"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <div class="d-flex">
           <button class="btn btn-warning btn-block btn-lg" id="btn-restart">Carregar de novo</button>
         </div>
